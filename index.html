@@ -13,33 +13,20 @@
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: {
-                        "primary": "#FFD700",
-                        "obsidian": "#0a0a0a",
-                        "surface": "#141414",
-                        "border-gold": "rgba(255, 215, 0, 0.15)",
-                        "gold": "#FFD700",
-                        "silver": "#C0C0C0",
-                        "bronze": "#CD7F32"
-                    },
+                    colors: { "primary": "#FFD700", "obsidian": "#0a0a0a", "surface": "#141414", "gold": "#FFD700", "silver": "#C0C0C0", "bronze": "#CD7F32" },
                     fontFamily: { "sans": ["Inter", "sans-serif"], "serif": ["Cinzel", "serif"] }
                 },
             },
         }
     </script>
     <style type="text/tailwindcss">
-        body {
-            @apply bg-obsidian text-gray-200 antialiased;
-            background-image: radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.08) 0%, transparent 60%);
-        }
+        body { @apply bg-obsidian text-gray-200 antialiased; background-image: radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.08) 0%, transparent 60%); }
         .rank-1 { background: linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, transparent 100%); border-left: 4px solid #FFD700; }
         .rank-2 { background: linear-gradient(90deg, rgba(192, 192, 192, 0.1) 0%, transparent 100%); border-left: 4px solid #C0C0C0; }
         .rank-3 { background: linear-gradient(90deg, rgba(205, 127, 50, 0.1) 0%, transparent 100%); border-left: 4px solid #CD7F32; }
-        
         .win-badge { @apply bg-emerald-900/30 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[11px] font-bold tracking-wider; }
         .loss-badge { @apply bg-rose-900/30 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded text-[11px] font-bold tracking-wider; }
         .table-row-hover:hover { @apply bg-white/5 transition-all duration-200 ease-in-out cursor-default; }
-        
         .loading-spinner { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
@@ -47,24 +34,18 @@
 <body class="font-sans min-h-screen flex flex-col">
 
     <header class="max-w-5xl mx-auto px-6 pt-20 pb-12 text-center w-full">
-        <div class="inline-block mb-4 p-3 rounded-full bg-gold/5 border border-gold/20">
-            <span class="material-symbols-outlined text-gold text-4xl block">swords</span>
-        </div>
-        <h1 class="font-serif text-5xl md:text-6xl font-black text-primary tracking-widest mb-4 uppercase drop-shadow-lg">
-            AOM Retold Amigos
-        </h1>
+        <h1 class="font-serif text-5xl md:text-6xl font-black text-primary tracking-widest mb-4 uppercase drop-shadow-lg">AOM Retold Amigos</h1>
         <p id="status-text" class="text-gray-500 font-medium tracking-[0.2em] uppercase text-xs flex justify-center items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
-            Iniciando...
+            <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span> Iniciando...
         </p>
     </header>
 
     <main class="flex-grow w-full max-w-6xl mx-auto px-4 md:px-6 pb-24">
-        <div class="bg-surface rounded-xl border border-border-gold overflow-hidden shadow-2xl relative">
+        <div class="bg-surface rounded-xl border border-gray-800 overflow-hidden shadow-2xl relative">
             
             <div id="loading-overlay" class="absolute inset-0 bg-surface/95 z-20 flex flex-col items-center justify-center backdrop-blur-sm transition-opacity duration-500">
                 <span class="material-symbols-outlined text-gold text-5xl loading-spinner mb-4">refresh</span>
-                <p id="loading-message" class="font-serif text-gold tracking-widest text-sm animate-pulse mb-4">BUSCANDO DADOS...</p>
+                <p id="loading-message" class="font-serif text-gold tracking-widest text-sm animate-pulse mb-4">CONECTANDO...</p>
                 <div class="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
                     <div id="progress-bar" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
                 </div>
@@ -73,29 +54,26 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="border-b border-border-gold bg-black/40">
+                        <tr class="border-b border-gray-800 bg-black/40">
                             <th class="px-6 py-5 text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 w-24">Rank</th>
                             <th class="px-6 py-5 text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500">Jogador</th>
                             <th class="px-6 py-5 text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 text-right">ELO</th>
                             <th class="px-6 py-5 text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 text-center">Win Rate</th>
-                            <th class="px-6 py-5 text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 text-right">Vitórias / Derrotas</th>
+                            <th class="px-6 py-5 text-[10px] uppercase font-bold tracking-[0.2em] text-gray-500 text-right">W / L</th>
                         </tr>
                     </thead>
-                    <tbody id="leaderboard-body" class="divide-y divide-white/5 text-sm md:text-base">
-                        </tbody>
+                    <tbody id="leaderboard-body" class="divide-y divide-white/5 text-sm md:text-base"></tbody>
                 </table>
             </div>
             
-            <div class="px-6 py-4 bg-black/40 border-t border-border-gold flex justify-between items-center text-[10px] text-gray-600 uppercase tracking-wider">
-                <span>Ordenado por ELO (1v1 Supremacy)</span>
-                <span id="last-updated">Aguardando dados...</span>
+            <div class="px-6 py-4 bg-black/40 border-t border-gray-800 flex justify-between items-center text-[10px] text-gray-600 uppercase tracking-wider">
+                <span>Ordenado por ELO (1v1)</span>
+                <span id="last-updated">Aguardando...</span>
             </div>
         </div>
     </main>
 
-    <footer class="text-center py-8 text-gray-600 text-[10px] uppercase tracking-widest">
-        Powered by JokerAOM
-    </footer>
+    <footer class="text-center py-8 text-gray-600 text-[10px] uppercase tracking-widest">Powered by AOMStats API</footer>
 
     <script>
         const playersList = [
@@ -115,8 +93,10 @@
 
         async function fetchPlayerStats(player) {
             const timestamp = new Date().getTime();
+            // TRÊS PROXIES DIFERENTES PARA GARANTIR
             const proxies = [
                 url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&cb=${timestamp}`,
+                url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
                 url => `https://corsproxy.io/?${encodeURIComponent(url)}`
             ];
             
@@ -128,16 +108,14 @@
                     if (!response.ok) continue;
 
                     const data = await response.json();
+                    // Normaliza a resposta dependendo do proxy
                     const text = data.contents || (typeof data === 'string' ? data : JSON.stringify(data));
 
-                    if (!text || text.includes("Too Many Requests")) {
-                        throw new Error("Dados inválidos");
-                    }
+                    if (!text || text.includes("Too Many Requests")) throw new Error("Block");
                     
-                    // Se o texto diz "Unknown profile", aí sim é erro. 
-                    // Se o texto veio vazio mas a requisição funcionou, é perfil sem partidas.
+                    // Se o perfil não existe ou não tem rank, retorna padrão 1000
                     if (text.includes("Unknown profile")) {
-                         return { name: player.name, id: player.id, elo: 0, wr: "-", wins: "0", losses: "0", success: false };
+                         return { name: player.name, id: player.id, elo: 1000, wr: "0.00", wins: "0", losses: "0", success: true };
                     }
 
                     const eloMatch = text.match(/rating of ([\d,]+)/);
@@ -147,7 +125,6 @@
                     const wMatchAlt = text.match(/(\d+) wins/i);
                     const lMatchAlt = text.match(/(\d+) losses/i);
 
-                    // CORREÇÃO AQUI: Se não achou Elo regex (null), define como 1000
                     const finalElo = eloMatch ? parseInt(eloMatch[1].replace(/,/g, '')) : 1000;
 
                     return {
@@ -160,11 +137,11 @@
                         success: true
                     };
                 } catch (e) {
-                    console.warn(`Tentativa falhou para ${player.name}`);
+                    // Continua para o próximo proxy
                 }
             }
 
-            // Se falhou todas as tentativas de rede
+            // Se falhou todos os proxies, retorna erro
             return { name: player.name, id: player.id, elo: 0, wr: "-", wins: "0", losses: "0", success: false };
         }
 
@@ -188,14 +165,12 @@
                 const data = await fetchPlayerStats(player);
                 results.push(data);
 
-                // Delay para não sobrecarregar a API
-                if (i < playersList.length - 1) {
-                    await delay(1200); 
-                }
+                // Delay de 2.2 segundos para não sobrecarregar
+                if (i < playersList.length - 1) await delay(2200); 
             }
 
             progressBar.style.width = `100%`;
-            loadingMsg.innerText = `ORGANIZANDO RANKING...`;
+            loadingMsg.innerText = `FINALIZANDO...`;
 
             results.sort((a, b) => {
                 if (b.elo !== a.elo) return b.elo - a.elo;
@@ -223,14 +198,11 @@
                     eloColor = "text-bronze text-lg";
                 }
 
-                // Se tiver erro de API mostra aviso, se for apenas sem stats (1000) mostra normal
-                const errorMsg = !p.success ? '<span class="text-[9px] text-red-500 block uppercase tracking-wide">Falha API</span>' : '';
+                const errorMsg = !p.success ? '<span class="text-[9px] text-red-500 block uppercase tracking-wide">FALHA API (TENTANDO...)</span>' : '';
 
                 const html = `
                     <tr class="${rowClass} transition-all">
-                        <td class="px-6 py-4 align-middle">
-                            <div class="flex items-center">${icon}</div>
-                        </td>
+                        <td class="px-6 py-4 align-middle"><div class="flex items-center">${icon}</div></td>
                         <td class="px-6 py-4 align-middle">
                             <span class="font-bold text-gray-100 tracking-wide text-base">${p.name}</span>
                             ${errorMsg}
@@ -238,13 +210,10 @@
                         <td class="px-6 py-4 text-right font-black ${eloColor} font-serif tracking-wider">
                             ${p.elo > 0 ? p.elo.toLocaleString() : '-'}
                         </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="text-primary font-bold">${p.wr}%</span>
-                        </td>
+                        <td class="px-6 py-4 text-center"><span class="text-primary font-bold">${p.wr}%</span></td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <span class="win-badge" title="Vitórias">${p.wins}W</span>
-                                <span class="loss-badge" title="Derrotas">${p.losses}L</span>
+                                <span class="win-badge">${p.wins}W</span><span class="loss-badge">${p.losses}L</span>
                             </div>
                         </td>
                     </tr>
@@ -263,8 +232,8 @@
         }
 
         initLeaderboard();
-        setInterval(initLeaderboard, 300000); 
-
+        // Atualiza a cada 10 minutos (600000ms) para não bloquear
+        setInterval(initLeaderboard, 600000); 
     </script>
 </body>
 </html>
